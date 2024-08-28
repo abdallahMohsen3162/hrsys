@@ -1,0 +1,44 @@
+﻿@model IEnumerable<DataLayer.ViewModels.EmployeeGeneralSettingsViewModel>
+
+@{
+    ViewData["Title"] = "Employee General Settings";
+}
+
+<h2>Employee General Settings</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employee Name</th>
+            <th>Image</th>
+            <th>Bonus</th>
+            <th>Discout</th>
+            <th>Weekly Holidays</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EmployeeName</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Image))
+                    {
+                        <img src="@Url.Content(item.Image)" alt="Employee Image" width="100" />
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
+                <td>@item.BonusPerHour</td>
+                <td>@item.RivalPerHour</td>
+                <td>@item.WeeklyHolidays</td>
+                <td>
+                    <a asp-action="Edit" asp-controller="GeneralSettings" asp-route-id="@item.EmployeeId" class="btn btn-warning">Edit Settings</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
