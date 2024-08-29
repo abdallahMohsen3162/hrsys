@@ -13,5 +13,9 @@ namespace BusinessLayer.Interfaces
         Task<GeneralSettings> GetSettingsByEmployeeIdAsync(int id);
         Task UpdateSettingsAsync(GeneralSettings model);
         Task<EmployeeDetailsViewModel> GetEmployeeDetailsAsync(int id);
+
+        Task<List<Employee>> GetEmployeesWithoutSettingsAsync();
+
+        Task CreateGeneralSettingsAsync(GeneralSettingsViewModel model);
     }
 }

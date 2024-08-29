@@ -56,14 +56,14 @@ namespace BusinessLayer.Services
             _context.Add(emp);
             await _context.SaveChangesAsync();
 
-            var settings = new GeneralSettings
-            {
-                EmployeeId = emp.Id,
-                WeeklyHolidays = "Saturday,Sunday"
-            };
+            //var settings = new GeneralSettings
+            //{
+            //    EmployeeId = emp.Id,
+            //    WeeklyHolidays = "Saturday,Sunday"
+            //};
 
-            _context.GeneralSettings.Add(settings);
-            await _context.SaveChangesAsync();
+            //_context.GeneralSettings.Add(settings);
+            //await _context.SaveChangesAsync();
 
         }
 

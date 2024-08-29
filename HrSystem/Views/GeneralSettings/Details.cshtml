@@ -31,5 +31,8 @@
 </div>
 
 <a asp-action="Index" class="btn btn-primary">Back to List</a>
-<a asp-action="Edit" asp-controller="GeneralSettings" asp-route-id="@Model.EmployeeId" class="btn btn-primary">Settings</a>
+@if (Model.SettingsExists)
+{
+    <a asp-action="Edit" asp-controller="GeneralSettings" asp-route-id="@Model.EmployeeId" class="btn btn-primary">Settings</a>
+}
 

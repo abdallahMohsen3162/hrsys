@@ -19,10 +19,11 @@ namespace DataLayer.Entities
         public Employee ?Employee { get; set; }
         [Required]
         //positive
-        [Range(0, int.MaxValue)]
+ 
+        [Range(0, int.MaxValue, ErrorMessage = "Hour Con not be less than 0")]
         public decimal bonusPerHoure { get; set; }
         [Required]
-        [Range(0, int.MaxValue)]
+        [Range(0, int.MaxValue, ErrorMessage = "Hour Con not be less than 0")]
         public decimal rivalPerHour { get; set; }
 
 
@@ -31,6 +32,7 @@ namespace DataLayer.Entities
 
 
         [NotMapped]
+        [Required]
         public List<Day> WeeklyHolidayList
         {
             get

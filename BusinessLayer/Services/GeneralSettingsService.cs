@@ -1,12 +1,7 @@
 ﻿using BusinessLayer.Interfaces;
 using DataLayer.Data;
-using DataLayer.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DataLayer.Entities;
+using DataLayer.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Services
@@ -31,11 +26,12 @@ namespace BusinessLayer.Services
                 EmployeeId = e.Id,
                 EmployeeName = e.EmployeeName,
                 Image = e.image,
-                BonusPerHour = e.GeneralSettings.bonusPerHoure,
-                RivalPerHour = e.GeneralSettings.rivalPerHour,
-                WeeklyHolidays = e.GeneralSettings.WeeklyHolidays
+                BonusPerHour = e.GeneralSettings?.bonusPerHoure ?? 0, // Default to 0 if null
+                RivalPerHour = e.GeneralSettings?.rivalPerHour ?? 0, // Default to 0 if null
+                WeeklyHolidays = e.GeneralSettings?.WeeklyHolidays ?? "Not Set" // Default to "Not Set" if null
             }).ToList();
         }
+
 
         public async Task<GeneralSettings> GetSettingsByEmployeeIdAsync(int id)
         {
@@ -59,22 +55,39 @@ namespace BusinessLayer.Services
 
         public async Task UpdateSettingsAsync(GeneralSettings model)
         {
-            string holidays = string.Join(",", model.WeeklyHolidayList);
-            model.WeeklyHolidays = holidays;
 
-            _context.Update(model);
+            var existingSettings = await _context.GeneralSettings
+                .FirstOrDefaultAsync(s => s.EmployeeId == model.EmployeeId);
+
+            existingSettings.bonusPerHoure = model.bonusPerHoure;
+            existingSettings.rivalPerHour = model.rivalPerHour;
+            existingSettings.WeeklyHolidays = model.WeeklyHolidays;
+
             await _context.SaveChangesAsync();
         }
+
+
+
 
         public async Task<EmployeeDetailsViewModel> GetEmployeeDetailsAsync(int id)
         {
             var employee = await _context.Employee
                 .Include(e => e.GeneralSettings)
                 .FirstOrDefaultAsync(e => e.Id == id);
+               Console.WriteLine(employee.Id);
 
-            if (employee == null)
+            if (employee.GeneralSettings == null)
             {
-                return null;
+                return new EmployeeDetailsViewModel
+                {
+                    EmployeeId = employee.Id,
+                    EmployeeName = employee.EmployeeName,
+                    Image = employee.image,
+                    BonusPerHour = 0,
+                    RivalPerHour = 0,
+                    WeeklyHolidays = "",
+                    SettingsExists = false
+                };
             }
 
             return new EmployeeDetailsViewModel
@@ -84,8 +97,34 @@ namespace BusinessLayer.Services
                 Image = employee.image,
                 BonusPerHour = employee.GeneralSettings.bonusPerHoure,
                 RivalPerHour = employee.GeneralSettings.rivalPerHour,
-                WeeklyHolidays = employee.GeneralSettings.WeeklyHolidays
+                WeeklyHolidays = employee.GeneralSettings.WeeklyHolidays,
+                SettingsExists = true
             };
         }
+
+        public async Task<List<Employee>> GetEmployeesWithoutSettingsAsync()
+        {
+            return await _context.Employee
+                .Where(e => e.GeneralSettings == null)
+                .ToListAsync();
+        }
+
+
+        public async Task CreateGeneralSettingsAsync(GeneralSettingsViewModel model)
+        {
+
+            var settings = new GeneralSettings
+            {
+                EmployeeId = model.EmployeeId,
+                bonusPerHoure = model.BonusPerHour,
+                rivalPerHour = model.RivalPerHour,
+                WeeklyHolidays = string.Join(",", model.SelectedDays)
+            };
+
+            _context.GeneralSettings.Add(settings);
+            await _context.SaveChangesAsync();
+        }
+
+
     }
 }

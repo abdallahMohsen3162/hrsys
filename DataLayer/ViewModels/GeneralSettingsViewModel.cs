@@ -7,24 +7,31 @@ using System.Threading.Tasks;
 using DataLayer.Entities;
 namespace DataLayer.ViewModels
 {
+
+
+    public class GeneralSettingsIndexViewModel
+    {
+        public List<EmployeeGeneralSettingsViewModel> ?EmployeesWithSettings { get; set; }
+        public List<Employee> ?EmployeesWithoutSettings { get; set; }
+        public GeneralSettingsViewModel NewGeneralSettings { get; set; }
+    }
+
     public class GeneralSettingsViewModel
     {
-        public int Id { get; set; }
-
         [Required]
-        [Display(Name = "Additional Hour Price")]
-        public decimal AdditionalHourPrice { get; set; }
-
+        public int EmployeeId { get; set; }
         [Required]
-        [Display(Name = "Rival Hour Price")]
-        public decimal RivalHourPrice { get; set; }
-
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid number.")]
+        public decimal BonusPerHour { get; set; }
         [Required]
-        [Display(Name = "First Day Holiday")]
-        public Day FirstDayHoliday { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid number.")]
+        public decimal RivalPerHour { get; set; }
+        public List<string> WeeklyHolidayList { get; set; } = new List<string>();
 
-        [Required]
-        [Display(Name = "Second Day Holiday")]
-        public Day SecondDayHoliday { get; set; }
+        public List<string> SelectedDays { get; set; } = new List<string>();
+
     }
+
+
+
 }

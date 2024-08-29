@@ -14,5 +14,7 @@ namespace DataLayer.ViewModels
         public decimal BonusPerHour { get; set; }
         public decimal RivalPerHour { get; set; }
         public string WeeklyHolidays { get; set; }
+
+        public bool SettingsExists { get; set; }
     }
 }

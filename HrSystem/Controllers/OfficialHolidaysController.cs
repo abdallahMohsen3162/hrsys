@@ -132,24 +132,13 @@ namespace HrSystem.Controllers
 
             var holiday = await _context.Holidays
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (holiday == null)
-            {
-                return NotFound();
-            }
-
-            return View(holiday);
-        }
-
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var holiday = await _context.Holidays.FindAsync(id);
+            
             _context.Holidays.Remove(holiday);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool HolidayExists(int id)
         {
